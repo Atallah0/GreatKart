@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, Category
+from django.http.response import HttpResponse
 
 
 def store(request, category_slug=None):
@@ -19,3 +20,15 @@ def store(request, category_slug=None):
         'product_count' : product_count,
     }
     return render(request, 'store/store.html', context)
+
+
+def product_details(request, category_slug, product_slug):
+    try:
+        product = Product.objects.get(category__slug=category_slug, slug=product_slug)
+    except Exception:
+        return HttpResponse('Product not found')
+    
+    context = {
+        'product': product,
+    }
+    return render(request, 'store/product_details.html', context)
